@@ -8,14 +8,13 @@ import (
 	"text/template"
 
 	"github.com/cli/go-gh/v2"
-	"github.com/cli/go-gh/v2/pkg/term"
 	"github.com/spf13/cobra"
 
-	"github.com/ajdawson/gh-multirepo/pkg/iostreams"
+	"github.com/cli/cli/v2/pkg/iostreams"
 )
 
 type MultirepoOptions struct {
-	IO      iostreams.IO
+	IO      *iostreams.IOStreams
 	Header  string
 	Repos   []string
 	Command []string
@@ -23,7 +22,7 @@ type MultirepoOptions struct {
 
 func NewCmdMultirepo() *cobra.Command {
 	opts := &MultirepoOptions{
-		IO: *iostreams.NewIO(term.FromEnv()),
+		IO: iostreams.System(),
 	}
 
 	cmd := &cobra.Command{
@@ -99,20 +98,20 @@ func runMultirepo(opts *MultirepoOptions) error {
 		}
 
 		if tmpl != nil {
-			fmt.Fprintln(opts.IO.Out(), "")
+			fmt.Fprintln(opts.IO.Out, "")
 		}
 	}
 
 	return nil
 }
 
-func printHeader(ios iostreams.IO, tmpl *template.Template, repo string) error {
+func printHeader(ios *iostreams.IOStreams, tmpl *template.Template, repo string) error {
 	if tmpl != nil {
 		header, err := renderTemplate(tmpl, repo)
 		if err != nil {
 			return err
 		}
-		fmt.Fprintln(ios.Out(), ios.ColorScheme().RepoHeader(header))
+		fmt.Fprintln(ios.Out, RepoHeader(ios.ColorScheme(), header))
 	}
 	return nil
 }

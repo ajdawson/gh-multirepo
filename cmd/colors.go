@@ -1,13 +1,8 @@
-package iostreams
+package cmd
 
 import (
+	"github.com/cli/cli/v2/pkg/iostreams"
 	"github.com/mgutz/ansi"
-)
-
-const (
-	NoTheme    = "none"
-	DarkTheme  = "dark"
-	LightTheme = "light"
 )
 
 var (
@@ -16,20 +11,15 @@ var (
 	lightThemeRepoHeader = ansi.ColorFunc("black+bu")
 )
 
-type ColorScheme struct {
-	Enabled bool
-	Theme   string
-}
-
-func (c *ColorScheme) RepoHeader(t string) string {
-	if !c.Enabled {
+func RepoHeader(cs *iostreams.ColorScheme, t string) string {
+	if !cs.Enabled {
 		return t
 	}
 
-	switch c.Theme {
-	case DarkTheme:
+	switch cs.Theme {
+	case iostreams.DarkTheme:
 		return darkThemeRepoHeader(t)
-	case LightTheme:
+	case iostreams.LightTheme:
 		return lightThemeRepoHeader(t)
 	default:
 		return noThemeRepoHeader(t)
