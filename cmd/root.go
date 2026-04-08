@@ -26,14 +26,21 @@ func NewCmdMultirepo() *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:   "multirepo [flags] <repos> -- <command>",
-		Short: "Run a Github CLI command on multiple repositories",
-		Long: `Run a Github CLI command on multiple repositories.
+		Use:   "gh multirepo [flags] <repos> -- <command>",
+		Short: "Run a GitHub CLI command on multiple repositories",
+		Long: `Run a GitHub CLI command on multiple repositories.
 
 Arguments:
-  repos    One or more [HOST/]OWNER/REPO specifications, separated by commas
-  command  A Github CLI command to run for each IFS repository
+  repos    One or more [HOST/]OWNER/REPO values, separated by commas
+  command  The GitHub CLI command to run for each specified repository
+
+Use '--' to separate the repository list from the command to execute.
 `,
+		Example: `  # View open pull requests in two repositories
+  $ gh multirepo cli/cli,myorg/myrepo -- pr list
+
+  # List all issues with label 'bug' in two repositories
+  $ gh multirepo cli/cli,cli/go-gh -- issue list --label bug`,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) < 2 {
 				cmd.SilenceUsage = false
@@ -43,7 +50,6 @@ Arguments:
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			noHeader, _ := cmd.Flags().GetBool("no-header")
-
 			if !noHeader {
 				headerTemplate, _ := cmd.Flags().GetString("header-template")
 				opts.Header = headerTemplate
@@ -64,6 +70,7 @@ Arguments:
 
 	cmd.SilenceErrors = true
 	cmd.SilenceUsage = true
+
 	return cmd
 }
 
