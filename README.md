@@ -6,6 +6,12 @@ occurrences of `-R`, but others do not. This wrapper simply executes the given
 command for each repository serially. You can only us `multirepo` to run `gh`
 commands that accept a `-R` option.
 
+## Install
+
+```sh
+gh extension install ajdawson/gh-multirepo
+```
+
 ## Usage
 
 The command takes a comma-separated list of repositories to work on, and a `gh`
